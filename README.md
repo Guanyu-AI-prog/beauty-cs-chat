@@ -87,6 +87,8 @@ beauty-cs-chat/
 │   ├── app.py              FastAPI：GET / 发页面，POST /api/chat 代理 SSE
 │   ├── index.html          单文件前端（HTML/CSS/JS 全内联）
 │   └── screenshots/        界面截图
+├── docs/
+│   └── 2026-10-23-工作纪要.md   当日重点、踩坑记录与待办
 └── demo/
     ├── .env.example        配置模板（真实 .env 不入库）
     ├── prompts/            美妆客服 System Prompt
