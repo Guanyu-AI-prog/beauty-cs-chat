@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>花漾肌研 · 智能客服</title>
+<style>
+  :root{
+    --bg:#faf6f4; --panel:#fff; --brand:#c4566f; --brand-deep:#a13e56; --brand-soft:#fbeef1;
+    --ink:#2e282b; --muted:#8b8187; --line:#ece3e6; --gold:#b3843f; --ok:#4a9d6f; --err:#c2504f;
+    --radius:16px; --shadow:0 1px 2px rgba(46,40,43,.04), 0 8px 24px rgba(46,40,43,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); font-size:15px; line-height:1.7;
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,"Segoe UI",sans-serif;
+    display:flex; flex-direction:column;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:12px 20px; background:rgba(255,255,255,.88); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20;
+  }
+  .brand{display:flex; align-items:center; gap:12px; min-width:0}
+  .logo{
+    width:38px; height:38px; flex:0 0 38px; border-radius:12px; display:grid; place-items:center;
+    background:linear-gradient(140deg,var(--brand),var(--brand-deep)); color:#fff;
+    font-size:19px; font-weight:600; box-shadow:0 4px 12px rgba(196,86,111,.28);
+  }
+  .brand h1{margin:0; font-size:16px; font-weight:600; letter-spacing:.3px}
+  .brand p{margin:0; font-size:12px; color:var(--muted)}
+  .head-right{display:flex; align-items:center; gap:8px}
+  .badge{
+    font-size:12px; color:var(--brand-deep); background:var(--brand-soft);
+    padding:4px 10px; border-radius:999px; white-space:nowrap;
+  }
+  .status{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted)}
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--muted)}
+  .dot.on{background:var(--ok)} .dot.off{background:var(--err)}
+  .btn{
+    border:1px solid var(--line); background:var(--panel); color:var(--ink); cursor:pointer;
+    padding:7px 13px; border-radius:10px; font-size:13px; font-family:inherit; transition:.15s;
+  }
+  .btn:hover{border-color:var(--brand); color:var(--brand-deep)}
+  .btn.primary{background:var(--brand); border-color:var(--brand); color:#fff}
+  .btn.primary:hover{background:var(--brand-deep); color:#fff}
+  /* ---------- 对话区 ---------- */
+  main{flex:1; overflow-y:auto; padding:26px 20px 8px; scroll-behavior:smooth}
+  .thread{max-width:780px; margin:0 auto}
+  .welcome{text-align:center; padding:34px 10px 10px}
+  .welcome h2{margin:0 0 8px; font-size:21px; font-weight:600}
+  .welcome p{margin:0 auto 22px; color:var(--muted); font-size:14px; max-width:460px}
+  .quick{display:flex; flex-wrap:wrap; gap:9px; justify-content:center}
+  .quick button{
+    border:1px solid var(--line); background:var(--panel); color:var(--ink); cursor:pointer;
+    padding:9px 14px; border-radius:999px; font-size:13px; font-family:inherit; transition:.15s;
+  }
+  .quick button:hover{border-color:var(--brand); color:var(--brand-deep); background:var(--brand-soft)}
+  .msg{display:flex; gap:11px; margin:0 0 20px; animation:rise .25s ease}
+  @keyframes rise{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+  .avatar{
+    width:30px; height:30px; flex:0 0 30px; border-radius:9px; display:grid; place-items:center;
+    font-size:12px; font-weight:600; color:#fff; margin-top:2px;
+  }
+  .msg.user .avatar{background:#8d8187}
+  .msg.bot .avatar{background:linear-gradient(140deg,var(--brand),var(--brand-deep))}
+  .bubble{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:13px 16px; box-shadow:var(--shadow); min-width:0; flex:1;
+  }
+  .msg.user .bubble{background:#f4eef0; border-color:#e8dde1; box-shadow:none}
+  .bubble p{margin:0 0 8px} .bubble p:last-child{margin-bottom:0}
+  .bubble ul,.bubble ol{margin:6px 0 10px; padding-left:22px}
+  .bubble li{margin:3px 0}
+  .bubble strong{font-weight:600}
+  .bubble code{background:var(--brand-soft); padding:1px 5px; border-radius:5px; font-size:13px}
+  .sources{margin-top:11px; padding-top:10px; border-top:1px dashed var(--line)}
+  .sources-title{font-size:12px; color:var(--muted); margin-bottom:6px}
+  .chips{display:flex; flex-wrap:wrap; gap:6px}
+  .chip{
+    font-size:11.5px; color:var(--gold); background:#fdf6ec; border:1px solid #f0e2cd;
+    padding:3px 9px; border-radius:7px; word-break:break-all;
+  }
+  .bar{display:flex; gap:6px; margin-top:9px}
+  .bar button{
+    border:none; background:none; color:var(--muted); font-size:12px; cursor:pointer; padding:2px 4px;
+    font-family:inherit;
+  }
+  .bar button:hover{color:var(--brand-deep)}
+  .typing{display:inline-flex; gap:4px; align-items:center; padding:4px 0}
+  .typing i{width:6px; height:6px; border-radius:50%; background:var(--brand); opacity:.35; animation:blink 1.2s infinite}
+  .typing i:nth-child(2){animation-delay:.2s} .typing i:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:.25; transform:translateY(0)} 40%{opacity:1; transform:translateY(-3px)}}
+  /* ---------- 输入区 ---------- */
+  footer{padding:10px 20px 18px; background:linear-gradient(to top,var(--bg) 72%,transparent)}
+  .composer{max-width:780px; margin:0 auto}
+  .input-box{
+    display:flex; align-items:flex-end; gap:9px; background:var(--panel); border:1px solid var(--line);
+    border-radius:14px; padding:9px 9px 9px 15px; box-shadow:var(--shadow); transition:.15s;
+  }
+  .input-box:focus-within{border-color:var(--brand)}
+  textarea{
+    flex:1; border:none; outline:none; resize:none; font:inherit; color:var(--ink);
+    background:transparent; max-height:160px; line-height:1.6; padding:4px 0;
+  }
+  textarea::placeholder{color:#bdb3b7}
+  .tip{max-width:780px; margin:8px auto 0; font-size:12px; color:#a89ea2; text-align:center}
+  /* ---------- 历史抽屉 ---------- */
+  .mask{position:fixed; inset:0; background:rgba(40,32,35,.28); opacity:0; pointer-events:none; transition:.2s; z-index:29}
+  .mask.on{opacity:1; pointer-events:auto}
+  .drawer{
+    position:fixed; top:0; right:0; bottom:0; width:310px; max-width:86vw; background:var(--panel);
+    border-left:1px solid var(--line); transform:translateX(100%); transition:transform .22s ease;
+    z-index:30; display:flex; flex-direction:column;
+  }
+  .drawer.on{transform:none}
+  .drawer-head{padding:16px 18px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center}
+  .drawer-head h3{margin:0; font-size:15px}
+  .drawer-list{flex:1; overflow-y:auto; padding:10px}
+  .session{
+    padding:10px 12px; border-radius:10px; cursor:pointer; border:1px solid transparent; margin-bottom:6px;
+  }
+  .session:hover{background:var(--brand-soft)}
+  .session.active{border-color:var(--brand); background:var(--brand-soft)}
+  .session b{display:block; font-size:13px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .session span{font-size:11.5px; color:var(--muted)}
+  .drawer-foot{padding:12px 16px; border-top:1px solid var(--line)}
+  .empty{color:var(--muted); font-size:13px; text-align:center; padding:30px 10px}
+  @media (max-width:640px){
+    header{padding:10px 13px} .brand p{display:none} .badge{display:none}
+    main{padding:18px 13px 4px} footer{padding:8px 13px 14px}
+    .btn{padding:6px 10px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">花</div>
+    <div><h1>花漾肌研</h1><p>智能客服 · 知识库问答</p></div>
+  </div>
+  <div class="head-right">
+    <span class="badge" id="modelBadge">加载中…</span>
+    <span class="status"><i class="dot" id="dot"></i><span id="statusText">连接中</span></span>
+    <button class="btn" id="btnHistory">历史</button>
+    <button class="btn primary" id="btnNew">新对话</button>
+  </div>
+</header>
+
+<main id="main">
+  <div class="thread">
+    <div class="welcome" id="welcome">
+      <h2>你好，我是花漾肌研智能客服</h2>
+      <p>我可以依据官方知识库回答商品、售后、会员、活动方面的问题，并在每条回答后标注引用来源。</p>
+      <div class="quick" id="quick">
+        <button>积分是怎么计算的？</button>
+        <button>会员等级怎么升级，有哪些权益？</button>
+        <button>收到商品不满意可以退换吗？</button>
+        <button>现在有哪些优惠活动？</button>
+      </div>
+    </div>
+    <div id="thread"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="composer">
+    <div class="input-box">
+      <textarea id="input" rows="1" placeholder="请输入你的问题，Enter 发送 / Shift+Enter 换行"></textarea>
+      <button class="btn primary" id="send">发送</button>
+    </div>
+    <p class="tip">回答基于花漾肌研官方知识库生成，来源见回答末尾</p>
+  </div>
+</footer>
+
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><h3>历史记录</h3><button class="btn" id="btnClose">关闭</button></div>
+  <div class="drawer-list" id="sessions"></div>
+  <div class="drawer-foot"><button class="btn" id="btnClear" style="width:100%">清空全部记录</button></div>
+</aside>
+
+<script>
+(function(){
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const thread = $("#thread"), input = $("#input"), main = $("#main");
+  const KEY = "by_chat_sessions_v1";
+  let sessions = [], current = null, busy = false;
+
+  /* ---------- 存储 ---------- */
+  const load = () => { try { sessions = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){ sessions = []; } };
+  const save = () => localStorage.setItem(KEY, JSON.stringify(sessions.slice(0, 40)));
+
+  function newSession(){
+    current = { id: "s" + Date.now(), title: "新的对话", messages: [], ts: Date.now() };
+    sessions.unshift(current); save(); renderSessions();
+  }
+  function touch(){
+    if(!current) return;
+    current.ts = Date.now();
+    sessions = [current, ...sessions.filter(s => s.id !== current.id)];
+    save(); renderSessions();
+  }
+
+  /* ---------- 极简 Markdown ---------- */
+  function esc(t){ return t.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+  function md(text){
+    const lines = esc(text).split("\n");
+    let out = "", inList = false;
+    for(const raw of lines){
+      const line = raw.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+                      .replace(/`([^`]+)`/g, "<code>$1</code>");
+      const ul = line.match(/^\s*[-•*]\s+(.*)$/);
+      const ol = line.match(/^\s*(\d+)[.、]\s+(.*)$/);
+      if(ul || ol){
+        if(!inList){ out += (ol ? "<ol>" : "<ul>"); inList = true; }
+        out += "<li>" + (ul ? ul[1] : ol[2]) + "</li>";
+        continue;
+      }
+      if(inList){ out += ol ? "</ol>" : "</ul>"; inList = false; }
+      out += line.trim() ? "<p>" + line + "</p>" : "";
+    }
+    if(inList) out += "</ul>";
+    return out;
+  }
+  function splitSources(text){
+    const i = text.indexOf("参考来源");
+    if(i < 0) return { body: text, sources: [] };
+    const body = text.slice(0, i).trim();
+    const sources = text.slice(i).split("\n").slice(1)
+      .map(s => s.replace(/^\s*[-•*]\s*/, "").trim()).filter(Boolean);
+    return { body, sources };
+  }
+
+  /* ---------- 渲染 ---------- */
+  function bubble(role, html, sources){
+    const wrap = document.createElement("div");
+    wrap.className = "msg " + role;
+    const av = role === "user" ? "我" : "花";
+    const src = (sources && sources.length)
+      ? '<div class="sources"><div class="sources-title">引用来源</div><div class="chips">' +
+        sources.map(s => '<span class="chip">' + esc(s) + "</span>").join("") + "</div></div>"
+      : "";
+    wrap.innerHTML = '<div class="avatar">' + av + '</div><div class="bubble">' + html + src + "</div>";
+    thread.appendChild(wrap);
+    main.scrollTop = main.scrollHeight;
+    return wrap;
+  }
+  function renderSessions(){
+    const box = $("#sessions");
+    if(!sessions.length){ box.innerHTML = '<div class="empty">还没有历史记录</div>'; return; }
+    box.innerHTML = "";
+    sessions.forEach(s => {
+      const d = document.createElement("div");
+      d.className = "session" + (current && s.id === current.id ? " active" : "");
+      d.innerHTML = "<b></b><span></span>";
+      d.querySelector("b").textContent = s.title;
+      d.querySelector("span").textContent = new Date(s.ts).toLocaleString("zh-CN", {month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});
+      d.onclick = () => { loadSession(s.id); toggleDrawer(false); };
+      box.appendChild(d);
+    });
+  }
+  function loadSession(id){
+    const s = sessions.find(x => x.id === id);
+    if(!s) return;
+    current = s; thread.innerHTML = ""; $("#welcome").style.display = "none";
+    s.messages.forEach(m => {
+      const p = splitSources(m.content);
+      bubble(m.role === "user" ? "user" : "bot", md(p.body), p.sources);
+    });
+    renderSessions();
+  }
+
+  /* ---------- 发送 ---------- */
+  async function send(text){
+    text = (text || "").trim();
+    if(!text || busy) return;
+    busy = true;
+    $("#send").disabled = true;
+    $("#welcome").style.display = "none";
+    if(!current) newSession();
+    current.messages.push({ role:"user", content:text });
+    if(current.title === "新的对话") current.title = text.slice(0, 24);
+    bubble("user", md(text));
+    touch();
+
+    const holder = bubble("bot", '<span class="typing"><i></i><i></i><i></i></span>', []);
+    const body = holder.querySelector(".bubble");
+    let raw = "";
+    try{
+      const resp = await fetch("/api/chat", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ model:"beauty-cs-rag", messages:[{role:"user", content:text}] })
+      });
+      const reader = resp.body.getReader();
+      const dec = new TextDecoder();
+      let buf = "";
+      while(true){
+        const { value, done } = await reader.read();
+        if(done) break;
+        buf += dec.decode(value, { stream:true });
+        const lines = buf.split("\n");
+        buf = lines.pop();
+        for(const line of lines){
+          if(!line.startsWith("data:")) continue;
+          const payload = line.slice(5).trim();
+          if(payload === "[DONE]") continue;
+          try{
+            const obj = JSON.parse(payload);
+            const err = obj.error;
+            if(err){ raw += "\n\n⚠️ " + (err.message || "请求失败"); continue; }
+            const delta = obj.choices && obj.choices[0] && obj.choices[0].delta;
+            if(delta && delta.content) raw += delta.content;
+          }catch(e){}
+        }
+        const p = splitSources(raw);
+        body.innerHTML = md(p.body) +
+          (p.sources.length ? '<div class="sources"><div class="sources-title">引用来源</div><div class="chips">' +
+            p.sources.map(x => '<span class="chip">' + esc(x) + "</span>").join("") + "</div></div>" : "");
+        main.scrollTop = main.scrollHeight;
+      }
+    }catch(e){
+      body.innerHTML = md("⚠️ 连接失败：" + e.message);
+    }
+    current.messages.push({ role:"assistant", content:raw });
+    touch();
+    busy = false; $("#send").disabled = false; input.focus();
+  }
+
+  /* ---------- 交互 ---------- */
+  function toggleDrawer(on){
+    $("#drawer").classList.toggle("on", on);
+    $("#mask").classList.toggle("on", on);
+  }
+  $("#send").onclick = () => send(input.value);
+  input.addEventListener("keydown", e => {
+    if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); const t = input.value; input.value = ""; send(t); }
+  });
+  input.addEventListener("input", () => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight,160) + "px"; });
+  $("#quick").addEventListener("click", e => { if(e.target.tagName === "BUTTON") send(e.target.textContent); });
+  $("#btnNew").onclick = () => { thread.innerHTML = ""; $("#welcome").style.display = ""; newSession(); input.focus(); };
+  $("#btnHistory").onclick = () => { renderSessions(); toggleDrawer(!$("#drawer").classList.contains("on")); };
+  $("#btnClose").onclick = () => toggleDrawer(false);
+  $("#mask").onclick = () => toggleDrawer(false);
+  $("#btnClear").onclick = () => { sessions = []; save(); current = null; thread.innerHTML = ""; $("#welcome").style.display = ""; renderSessions(); };
+
+  /* ---------- 启动 ---------- */
+  load();
+  newSession();
+  fetch("/api/models").then(r => r.json()).then(d => {
+    const id = (d.data && d.data[0] && d.data[0].id) || "beauty-cs-rag";
+    $("#modelBadge").textContent = id;
+  }).catch(() => $("#modelBadge").textContent = "beauty-cs-rag");
+  fetch("/api/health").then(r => r.json()).then(d => {
+    const ok = d.upstream && d.upstream.status === "ok";
+    $("#dot").className = "dot " + (ok ? "on" : "off");
+    $("#statusText").textContent = ok ? "服务正常" : "服务异常";
+    if(ok && d.upstream.docs) $("#statusText").textContent = "服务正常 · " + d.upstream.docs + " 篇";
+  }).catch(() => { $("#dot").className = "dot off"; $("#statusText").textContent = "服务异常"; });
+  input.focus();
+})();
+</script>
+</body>
+</html>

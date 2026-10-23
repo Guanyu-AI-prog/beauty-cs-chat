@@ -1,0 +1,288 @@
+{
+  "meta": {
+    "name": "花漾肌研 客服评测集 v1",
+    "version": "1.0",
+    "created": "2026-10-08",
+    "total": 30,
+    "type_distribution": {
+      "单跳事实": 8,
+      "多跳对比": 6,
+      "政策流程": 8,
+      "边界拒答": 4,
+      "合规敏感": 4
+    },
+    "scoring": "must_contain 中任一词命中即记该题命中；full_score 需全部满足"
+  },
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "单跳事实",
+      "difficulty": "easy",
+      "question": "你们的氨基酸洁面乳pH值是多少？",
+      "ground_truth": "5.5，弱酸性",
+      "must_contain": ["5.5"],
+      "source": "products.md#氨基酸温和洁面乳"
+    },
+    {
+      "id": "Q02",
+      "type": "单跳事实",
+      "difficulty": "easy",
+      "question": "视黄醇紧致晚霜里视黄醇浓度是多少？",
+      "ground_truth": "0.1%，采用包裹缓释技术",
+      "must_contain": ["0.1%"],
+      "source": "products.md#视黄醇紧致晚霜"
+    },
+    {
+      "id": "Q03",
+      "type": "单跳事实",
+      "difficulty": "easy",
+      "question": "物理防晒乳的防晒指数是多少？",
+      "ground_truth": "SPF50+ PA++++",
+      "must_contain": ["SPF50", "PA++++"],
+      "source": "products.md#轻透物理防晒乳"
+    },
+    {
+      "id": "Q04",
+      "type": "单跳事实",
+      "difficulty": "easy",
+      "question": "你们唇釉有哪几个色号？",
+      "ground_truth": "101 干枯玫瑰、102 烂番茄、103 奶油杏",
+      "must_contain": ["101", "102", "103"],
+      "source": "products.md#丝绒哑光唇釉"
+    },
+    {
+      "id": "Q05",
+      "type": "单跳事实",
+      "difficulty": "easy",
+      "question": "积雪草面膜一盒几片，多少钱？",
+      "ground_truth": "一盒5片，¥89（会员价¥80）",
+      "must_contain": ["5片", "89"],
+      "source": "products.md#积雪草舒缓修护面膜"
+    },
+    {
+      "id": "Q06",
+      "type": "单跳事实",
+      "difficulty": "medium",
+      "question": "烟酰胺丝滑身体乳的烟酰胺浓度是多少？",
+      "ground_truth": "3%",
+      "must_contain": ["3%"],
+      "source": "products.md#烟酰胺丝滑身体乳"
+    },
+    {
+      "id": "Q07",
+      "type": "单跳事实",
+      "difficulty": "medium",
+      "question": "咖啡因眼霜的核心成分有哪些？",
+      "ground_truth": "咖啡因、多肽复合物、七叶树提取物",
+      "must_contain": ["咖啡因", "多肽", "七叶树"],
+      "source": "products.md#咖啡因赋能眼霜"
+    },
+    {
+      "id": "Q08",
+      "type": "单跳事实",
+      "difficulty": "medium",
+      "question": "鲜萃焕活化妆水主打什么成分？",
+      "ground_truth": "大马士革玫瑰水、透明质酸、β-葡聚糖",
+      "must_contain": ["玫瑰水", "透明质酸"],
+      "source": "products.md#鲜萃焕活化妆水"
+    },
+    {
+      "id": "Q09",
+      "type": "多跳对比",
+      "difficulty": "medium",
+      "question": "涂了你们的物理防晒需要卸妆吗？怎么卸？",
+      "ground_truth": "建议配合玫瑰净颜卸妆膏清洁；油性/混油肤质卸后可用氨基酸洁面乳二次清洁",
+      "must_contain": ["卸妆膏"],
+      "source": "products.md#轻透物理防晒乳 + products.md#玫瑰净颜卸妆膏"
+    },
+    {
+      "id": "Q10",
+      "type": "多跳对比",
+      "difficulty": "medium",
+      "question": "我是油痘肌，推荐你们家哪两款？",
+      "ground_truth": "水杨酸净痘精华 + 氨基酸温和洁面乳",
+      "must_contain": ["水杨酸", "洁面"],
+      "source": "products.md#水杨酸净痘精华 + products.md#氨基酸温和洁面乳"
+    },
+    {
+      "id": "Q11",
+      "type": "多跳对比",
+      "difficulty": "medium",
+      "question": "敏感肌想提亮肤色，选哪款精华？要注意什么？",
+      "ground_truth": "烟酰胺焕亮精华液；先耳后测试，初次隔天用建立耐受",
+      "must_contain": ["烟酰胺", "耐受"],
+      "source": "products.md#烟酰胺焕亮精华液 + faq.md#Q1"
+    },
+    {
+      "id": "Q12",
+      "type": "多跳对比",
+      "difficulty": "hard",
+      "question": "我怀孕了，你们家哪些产品能用，哪些绝对不能用？",
+      "ground_truth": "能用：氨基酸洁面乳、物理防晒乳；禁用：视黄醇紧致晚霜（孕妇及哺乳期禁用）；水杨酸精华需咨询医生",
+      "must_contain": ["视黄醇", "禁用"],
+      "source": "products.md#视黄醇紧致晚霜 + faq.md#Q2"
+    },
+    {
+      "id": "Q13",
+      "type": "多跳对比",
+      "difficulty": "hard",
+      "question": "洁面乳和保湿面霜一起买，一共多少钱？",
+      "ground_truth": "组成保湿套装立减30：69+159-30=198元",
+      "must_contain": ["198"],
+      "source": "products.md#氨基酸温和洁面乳"
+    },
+    {
+      "id": "Q14",
+      "type": "多跳对比",
+      "difficulty": "hard",
+      "question": "我要买一盒面膜加一瓶身体乳，能包邮吗？想要顺丰可以吗？",
+      "ground_truth": "合计168元，满99包邮（普通快递）；顺丰需满199免费，未满需补10元差价",
+      "must_contain": ["包邮", "10"],
+      "source": "products.md#全店通用信息 + policies.md#物流与发货"
+    },
+    {
+      "id": "Q15",
+      "type": "政策流程",
+      "difficulty": "medium",
+      "question": "我用了你们的产品过敏了，怎么退？",
+      "ground_truth": "提供过敏照片+订单号（较严重加就医凭证）；客服24小时内审核；通过后全额退款或换敏感肌系列；运费商家承担",
+      "must_contain": ["照片", "24小时"],
+      "source": "policies.md#过敏问题专项处理"
+    },
+    {
+      "id": "Q16",
+      "type": "政策流程",
+      "difficulty": "easy",
+      "question": "七天无理由退货有什么条件？",
+      "ground_truth": "签收7天内、未拆封、不影响二次销售；无理由退货运费买家承担",
+      "must_contain": ["未拆封"],
+      "source": "policies.md#七天无理由退货"
+    },
+    {
+      "id": "Q17",
+      "type": "政策流程",
+      "difficulty": "medium",
+      "question": "退货时赠品要一起寄回吗？不寄回会怎样？",
+      "ground_truth": "需一并寄回；未寄回按赠品标价从退款中扣除；赠品不支持单独退换",
+      "must_contain": ["一并寄回", "扣除"],
+      "source": "policies.md#赠品处理规则"
+    },
+    {
+      "id": "Q18",
+      "type": "政策流程",
+      "difficulty": "medium",
+      "question": "价保怎么申请？有什么例外情况？",
+      "ground_truth": "签收15天内降价可凭订单号申请补差价；大促定金订单/直播价/拼团价不参与；每单限一次",
+      "must_contain": ["15天"],
+      "source": "policies.md#价格保护"
+    },
+    {
+      "id": "Q19",
+      "type": "政策流程",
+      "difficulty": "medium",
+      "question": "收到货有破损怎么办？",
+      "ground_truth": "签收48小时内拍三要素照片（外箱、面单、问题商品）联系客服；核实后优先补发，不能补发则全额退款",
+      "must_contain": ["48小时", "照片"],
+      "source": "policies.md#破损与少件处理"
+    },
+    {
+      "id": "Q20",
+      "type": "政策流程",
+      "difficulty": "medium",
+      "question": "怎么开发票？要多久？",
+      "ground_truth": "默认电子普通发票，下单备注抬头税号，7个工作日内开具；专票需联系客服提供资料",
+      "must_contain": ["7个工作日"],
+      "source": "policies.md#发票"
+    },
+    {
+      "id": "Q21",
+      "type": "政策流程",
+      "difficulty": "easy",
+      "question": "你们多久发货？",
+      "ground_truth": "付款后48小时内发货；预售商品以商品页标注为准",
+      "must_contain": ["48小时"],
+      "source": "policies.md#物流与发货"
+    },
+    {
+      "id": "Q22",
+      "type": "政策流程",
+      "difficulty": "medium",
+      "question": "会员积分怎么算？生日有什么权益？",
+      "ground_truth": "消费1元积1分，100分起兑换；生日当月双倍积分+50元无门槛券",
+      "must_contain": ["1元1分", "50"],
+      "source": "policies.md#会员与积分"
+    },
+    {
+      "id": "Q23",
+      "type": "边界拒答",
+      "difficulty": "medium",
+      "question": "你们的产品能治好我的痘痘吗？",
+      "ground_truth": "化妆品非药品，不具备治疗作用；水杨酸精华可改善出油闭口；严重请就医",
+      "must_contain": ["非药品"],
+      "source": "policies.md#安全与功效声明 + faq.md#Q30"
+    },
+    {
+      "id": "Q24",
+      "type": "边界拒答",
+      "difficulty": "easy",
+      "question": "你们家眼影盘哪个色号好看？",
+      "ground_truth": "没有眼影盘品类（主营护肤+唇釉），不编造商品",
+      "must_contain": ["没有"],
+      "source": "（负样本：知识库无此商品）"
+    },
+    {
+      "id": "Q25",
+      "type": "边界拒答",
+      "difficulty": "medium",
+      "question": "能不能帮我安排三个月后再发货？",
+      "ground_truth": "不支持定制发货时间；发货时效为付款后48小时内（预售以页面为准）",
+      "must_contain": ["不支持"],
+      "source": "policies.md#物流与发货"
+    },
+    {
+      "id": "Q26",
+      "type": "边界拒答",
+      "difficulty": "medium",
+      "question": "你们有治疗湿疹的药膏卖吗？",
+      "ground_truth": "没有药品；花漾肌研只销售化妆品，不具备治疗作用，建议就医",
+      "must_contain": ["没有", "化妆品"],
+      "source": "policies.md#安全与功效声明"
+    },
+    {
+      "id": "Q27",
+      "type": "合规敏感",
+      "difficulty": "hard",
+      "question": "烟酰胺精华能美白吗？用多久能白一个度？",
+      "ground_truth": "应回答：功效为焕亮肤色、改善暗沉不均（化妆品功效，非医疗作用），效果因人而异；不应承诺\"美白一个度\"",
+      "must_contain": ["焕亮", "因人而异"],
+      "source": "products.md#烟酰胺焕亮精华液"
+    },
+    {
+      "id": "Q28",
+      "type": "合规敏感",
+      "difficulty": "medium",
+      "question": "视黄醇晚霜白天可以用吗？",
+      "ground_truth": "仅夜间使用；白天必须严格防晒",
+      "must_contain": ["仅夜间", "夜间"],
+      "source": "products.md#视黄醇紧致晚霜"
+    },
+    {
+      "id": "Q29",
+      "type": "合规敏感",
+      "difficulty": "medium",
+      "question": "哺乳期可以用水杨酸净痘精华吗？",
+      "ground_truth": "建议咨询医生后使用",
+      "must_contain": ["医生"],
+      "source": "products.md#水杨酸净痘精华"
+    },
+    {
+      "id": "Q30",
+      "type": "合规敏感",
+      "difficulty": "hard",
+      "question": "你们说过敏包退，是不是任何情况下拆封了都能退？",
+      "ground_truth": "不是。过敏退货需提供照片/订单号等材料经客服审核；非过敏原因的拆封商品不支持七天无理由",
+      "must_contain": ["审核"],
+      "source": "policies.md#过敏问题专项处理 + policies.md#七天无理由退货"
+    }
+  ]
+}
